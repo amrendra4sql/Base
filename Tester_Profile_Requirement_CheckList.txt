@@ -1,0 +1,220 @@
+Added New Line
+
+
+Should know about following -
+
+ Metadata Testing
+ Data Completeness Testing
+ Data Quality Testing
+ Data Transformation Testing
+ 
+ Regression Testing  
+ Reference Data Testing
+ Integration Testing
+ Performance Testing
+
+0. Should know about each stages of SDLC and what test required on each stage 
+
+1. How to compare large volumes of data typically millions of records?
+	1.1 If it is in DB
+	1.2 If data in multiple Flat Files
+	1.3 How to validate Reference data between spreadsheet and database or across environments.
+
+2. Automate ETL Testing using ETL Validator
+
+3. How to do Referential Integrity checks
+
+4. How to ensure quality of data in flat files 
+	4.1 What types of errors a flat files can have
+
+5. What is the different types of testing 
+	Integration Testing
+	Unit Test
+	QA
+	UAT
+
+6. What all the columns a typical Test document should have?
+
+7. Optimization Techniques:
+
+The sql query becomes faster if you use the actual columns names in SELECT statement instead of than ‘*’.
+
+SELECT id, first_name, last_name, age, subject FROM student_details;
+ Instead:
+SELECT * FROM student_details;
+HAVING clause is used to filter the rows after all the rows are selected. It is just like a filter.
+
+Do not use HAVING clause for any other purposes.
+For Example: Write the query as
+
+SELECT subject, count(subject)
+FROM student_details
+WHERE subject != 'English'
+AND subject != 'Maths'
+GROUP BY subject;
+
+Instead:
+
+SELECT subject, count(subject)
+FROM student_details
+GROUP BY subject
+HAVING subject!= 'Vancouver' AND subject!= 'Toronto';
+Minimise sub queries:
+
+SELECT name
+FROM employee
+WHERE (salary, age ) = (SELECT MAX (salary), MAX (age)
+FROM employee_details)
+AND dept = 'engineering';
+
+Instead:
+
+SELECT name
+FROM employee
+WHERE salary = (SELECT MAX(salary) FROM employee_details)
+AND age = (SELECT MAX(age) FROM employee_details)
+AND emp_dept = 'engineering';
+Use operator EXISTS, IN and table joins appropriately in your query.
+
+a) Usually IN has the slowest performance.
+b) IN is efficient when most of the filter criteria is in the sub-query.
+c) EXISTS is efficient when most of the filter criteria is in the main query.
+
+For Example: Write the query as
+
+Select * from product p
+where EXISTS (select * from order_items o
+where o.product_id = p.product_id)
+Instead:
+
+Select * from product p 
+where product_id IN
+ (select product_id from order_items)
+Use EXISTS instead of DISTINCT when using joins which involves tables having one-to-many relationship.
+
+For Example: Write the query as
+
+SELECT d.dept_id, d.dept
+FROM dept d
+WHERE EXISTS ( SELECT 'X' FROM employee e WHERE e.dept = d.dept);
+
+Instead:
+
+SELECT DISTINCT d.dept_id, d.dept
+FROM dept d,employee e
+WHERE e.dept = e.dept;
+Try to use UNION ALL in place of UNION.
+
+For Example: Write the query as
+
+SELECT id, first_name
+FROM student_details_class10
+UNION ALL
+SELECT id, first_name
+FROM sports_team;
+
+Instead:
+
+SELECT id, first_name, subject
+FROM student_details_class10
+UNION
+SELECT id, first_name
+FROM sports_team;
+Be careful while using conditions in WHERE clause.
+
+For Example: Write the query as
+
+SELECT id, first_name, age FROM student_details WHERE age > 10;
+
+Instead:
+
+SELECT id, first_name, age FROM student_details WHERE age != 10;
+Write the query as
+
+SELECT id, first_name, age
+FROM student_details
+WHERE first_name LIKE 'Chan%';
+
+Instead:
+
+SELECT id, first_name, age
+FROM student_details
+WHERE SUBSTR(first_name,1,3) = 'Cha';
+Write the query as
+
+SELECT id, first_name, age
+FROM student_details
+WHERE first_name LIKE NVL ( :name, '%');
+
+Instead:
+
+SELECT id, first_name, age
+FROM student_details
+WHERE first_name = NVL ( :name, first_name);
+Write the query as
+
+SELECT product_id, product_name
+FROM product
+WHERE unit_price BETWEEN MAX(unit_price) and MIN(unit_price)
+
+Instead:
+
+SELECT product_id, product_name
+FROM product
+WHERE unit_price >= MAX(unit_price)
+and unit_price <= MIN(unit_price)
+Write the query as
+
+SELECT id, name, salary
+FROM employee
+WHERE dept = 'Electronics'
+AND location = 'Bangalore';
+
+Instead:
+
+SELECT id, name, salary
+FROM employee
+WHERE dept || location= 'ElectronicsBangalore';
+Use non-column expression on one side of the query because it will be processed earlier.
+
+Write the query as
+
+SELECT id, name, salary
+FROM employee
+WHERE salary < 25000;
+
+Instead:
+
+SELECT id, name, salary
+FROM employee
+WHERE salary + 10000 < 35000;
+Write the query as
+
+SELECT id, first_name, age
+FROM student_details
+WHERE age > 10;
+
+Instead:
+
+SELECT id, first_name, age
+FROM student_details
+WHERE age NOT = 10;
+Use DECODE to avoid the scanning of same rows or joining the same table repetitively. DECODE can also be made used in place of GROUP BY or ORDER BY clause.
+
+For Example: Write the query as
+
+SELECT id FROM employee
+WHERE name LIKE 'Srini%'
+and location = 'Bangalore';
+
+Instead:
+
+SELECT DECODE(location,'Bangalore',id,NULL) id FROM employee
+WHERE name LIKE 'Srini%';
+To store large binary objects, first place them in the file system and add the file path in the database.
+To write queries which provide efficient performance follow the general SQL standard rules.
+a) Use single case for all SQL verbs
+b) Begin all SQL verbs on a new line
+c) Separate all words with a single space
+d) Right or left aligning verbs within the initial SQL verb
+
