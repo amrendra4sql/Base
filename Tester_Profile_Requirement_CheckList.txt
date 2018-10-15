@@ -1,8 +1,4 @@
 Added 2nd Line
-
-Added New Line
-
-
 Should know about following -
 
  Metadata Testing
@@ -39,7 +35,7 @@ Should know about following -
 
 7. Optimization Techniques:
 
-The sql query becomes faster if you use the actual columns names in SELECT statement instead of than ‘*’.
+The sql query becomes faster if you use the actual columns names in SELECT statement instead of than â€˜*â€™.
 
 SELECT id, first_name, last_name, age, subject FROM student_details;
  Instead:
